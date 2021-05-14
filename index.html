@@ -1,0 +1,1171 @@
+<!doctype html>
+<html lang="ja">
+
+<head>
+    <meta charset="utf-8">
+    <title>SUPPLY LINE calculator</title>
+    <meta name="description" content="ボードゲーム SUPPLY LINEの攻撃可否判定および計算を行います">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+</head>
+
+<body>
+<header class="bg-dark ps-2">
+    <h1 class="text-light mt-3 py-2">SUPPLY LINE calculator</h1>
+</header>
+<article class="container my-4">
+    <h2 class="fs-4 fw-bold text-decoration-underline">概要</h2>
+    <div class="fs-6">
+        このサイトはサークル四等星様がゲームマーケット2021春にて頒布した2人用ボードゲーム「サプライライン」の作戦時の計算を行うサイトです。 <br>
+        制約や計算がかなり煩雑なので、ツールで自動的に判定できれば、と考えた次第です。
+        サプライラインのルールブックは<a href="https://drive.google.com/drive/folders/1gWdlZ8ZTsJSV-lZ7_CEYQOlOn1q3BXjf" target="_blank">こちら(公式サイト)</a>をご確認ください。<br>
+        <br>
+        本サイトの制作はらうんどとりっぷの鈴木さんが行っています。<br>
+        四等星様には許可を取って本サイトを作成しておりますが、全て正確であるとは言い切れません。<br>
+        従って本サイトについて四等星様への問い合わせはお控えください。<br>
+        ルールと計算結果が異なる場合は下記記載のメールアドレスまでお知らせいただけますと幸いです。<br>
+        jun@roundtrip.games
+    </div>
+</article>
+
+<hr class="mx-5">
+
+<article class="container">
+    <h2 class="fs-4 fw-bold text-decoration-underline">使い方</h2>
+    <section>
+        以下3ステップで、攻撃可能な前線を特定します。
+        <ol>
+            <li>「発動させたラージタブ」を選択し、確定させる</li>
+            <li>「追加発動させたタブ」を選択し、確定させる</li>
+            <li>「攻撃可能な前線」が表示されます</li>
+        </ol>
+        判定できていない部分もありますので、そこは手作業で判定いただきたくお願いします。<br>
+        判定できていない処理
+        <ul>
+            <li>陸軍での攻撃時の射程</li>
+        </ul>
+
+
+    </section>
+
+    <hr class="mx-5">
+
+    <section>
+        <h2 class="fs-4 my-4 fw-bold text-decoration-underline">発動させたラージタブ</h2>
+        <section class="pb-3 bg-success bg-gradient text-white">
+            <h4 class="pt-3 ps-3 fs-5 fw-bold">陸軍</h4>
+            <div class="ps-3">
+                <div class="fs-5 w-50 p-2 d-inline-block border border-1 border-white me-3" onClick="up_large_tab('large_infantry')">INFANTRY</div>
+                <select name="large_infantry" id="large_infantry">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                    <option value=5>5</option>
+                </select>
+                <div class="p-2 ms-3 d-inline-block border border-white border-1" onClick="reset_large_tab('large_infantry')">リセット</div>
+
+                <hr>
+
+                <div class="fs-5 w-50 p-2 d-inline-block border border-1 border-white me-3" onClick="up_large_tab('large_canon')">CANON</div>
+                <select name="large_canon" id="large_canon">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                    <option value=5>5</option>
+                </select>
+                <div class="p-2 ms-3 d-inline-block border border-white border-1" onClick="reset_large_tab('large_canon')">リセット</div>
+
+                <hr>
+
+                <div class="fs-5 w-50 p-2 d-inline-block border border-1 border-white me-3" onClick="up_large_tab('large_armored_vehicle')">ARMORED VEHICLE</div>
+                <select name="large_armored_vehicle" id="large_armored_vehicle">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                    <option value=5>5</option>
+                </select>
+                <div class="p-2 ms-3 d-inline-block border border-white border-1" onClick="reset_large_tab('large_armored_vehicle')">リセット</div>
+
+                <hr>
+
+                <div class="fs-5 w-50 p-2 d-inline-block border border-1 border-white me-3" onClick="up_large_tab('large_tank')">TANK</div>
+                <select name="large_tank" id="large_tank">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                    <option value=5>5</option>
+                </select>
+                <div class="p-2 ms-3 d-inline-block border border-white border-1" onClick="reset_large_tab('large_tank')">リセット</div>
+
+                <hr>
+
+                <div class="fs-5 w-50 p-2 d-inline-block border border-1 border-white me-3" onClick="up_large_tab('large_tank_destroyer')">TANK DESTROYER</div>
+                <select name="large_tank_destroyer" id="large_tank_destroyer">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                    <option value=5>5</option>
+                </select>
+                <div class="p-2 ms-3 d-inline-block border border-white border-1" onClick="reset_large_tab('large_tank_destroyer')">リセット</div>
+
+                <hr>
+
+                <div class="fs-5 w-50 p-2 d-inline-block border border-1 border-white me-3" onClick="up_large_tab('large_heavy_tank')">HEAVY TANK</div>
+                <select name="large_heavy_tank" id="large_heavy_tank">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                    <option value=5>5</option>
+                </select>
+                <div class="p-2 ms-3 d-inline-block border border-white border-1" onClick="reset_large_tab('large_heavy_tank')">リセット</div>
+            </div>
+        </section>
+        <section class="pb-3 bg-primary bg-gradient text-white">
+            <h4 class="pt-3 ps-3 fs-5 fw-bold">海軍</h4>
+            <div class="ps-3">
+                <div class="fs-5 w-50 p-2 d-inline-block border border-1 border-white me-3" onClick="up_large_tab('large_heavy_cruiser')">HEAVY CRUISER</div>
+                <select name="large_heavy_cruiser" id="large_heavy_cruiser">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                    <option value=5>5</option>
+                </select>
+                <div class="p-2 ms-3 d-inline-block border border-white border-1" onClick="reset_large_tab('large_heavy_cruiser')">リセット</div>
+
+                <hr>
+
+                <div class="fs-5 w-50 p-2 d-inline-block border border-1 border-white me-3" onClick="up_large_tab('large_battle_ship')">BATTLE SHIP</div>
+                <select name="large_battle_ship" id="large_battle_ship">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                    <option value=5>5</option>
+                </select>
+                <div class="p-2 ms-3 d-inline-block border border-white border-1" onClick="reset_large_tab('large_battle_ship')">リセット</div>
+
+                <hr>
+
+                <div class="fs-5 w-50 p-2 d-inline-block border border-1 border-white me-3" onClick="up_large_tab('large_landing_ship')">LANDING SHIP</div>
+                <select name="large_landing_ship" id="large_landing_ship">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                    <option value=5>5</option>
+                </select>
+                <div class="p-2 ms-3 d-inline-block border border-white border-1" onClick="reset_large_tab('large_landing_ship')">リセット</div>
+
+                <hr>
+
+                <div class="fs-5 w-50 p-2 d-inline-block border border-1 border-white me-3" onClick="up_large_tab('large_aircraft_carrier')">AIRCRAFT CARRIER</div>
+                <select name="large_aircraft_carrier" id="large_aircraft_carrier">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                    <option value=5>5</option>
+                </select>
+                <div class="p-2 ms-3 d-inline-block border border-white border-1" onClick="reset_large_tab('large_aircraft_carrier')">リセット</div>
+            </div>
+        </section>
+        <section class="pb-3 bg-danger bg-gradient text-white">
+            <h4 class="pt-3 ps-3 fs-5 fw-bold">空軍</h4>
+            <div class="ps-3">
+                <div class="fs-5 w-50 p-2 d-inline-block border border-1 border-white me-3" onClick="up_large_tab('large_fighter')">FIGHTER</div>
+                <select name="large_fighter" id="large_fighter">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                    <option value=5>5</option>
+                </select>
+                <div class="p-2 ms-3 d-inline-block border border-white border-1" onClick="reset_large_tab('large_fighter')">リセット</div>
+
+                <hr>
+
+                <div class="fs-5 w-50 p-2 d-inline-block border border-1 border-white me-3" onClick="up_large_tab('large_air_born')">AIR BORN</div>
+                <select name="large_air_born" id="large_air_born">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                    <option value=5>5</option>
+                </select>
+                <div class="p-2 ms-3 d-inline-block border border-white border-1" onClick="reset_large_tab('large_air_born')">リセット</div>
+
+                <hr>
+
+                <div class="fs-5 w-50 p-2 d-inline-block border border-1 border-white me-3" onClick="up_large_tab('large_bomber')">BOMBER</div>
+                <select name="large_bomber" id="large_bomber">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                    <option value=5>5</option>
+                </select>
+                <div class="p-2 ms-3 d-inline-block border border-white border-1" onClick="reset_large_tab('large_bomber')">リセット</div>
+            </div>
+        </section>
+        <section class="pb-3 bg-warning bg-gradient">
+            <h4 class="pt-3 ps-3 fs-5 fw-bold">補給</h4>
+            <div class="ps-3">
+                <div class="fs-5 w-50 p-2 d-inline-block border border-1 border-white me-3" onClick="up_large_tab('large_supply_propaganda')">SUPPLY-PROPAGANDA</div>
+                <select name="large_supply_propaganda" id="large_supply_propaganda">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                    <option value=5>5</option>
+                </select>
+                <div class="p-2 ms-3 d-inline-block border border-white border-1" onClick="reset_large_tab('large_supply_propaganda')">リセット</div>
+
+                <hr>
+
+                <div class="fs-5 w-50 p-2 d-inline-block border border-1 border-white me-3" onClick="up_large_tab('large_supply_march')">SUPPLY-MARCH</div>
+                <select name="large_supply_march" id="large_supply_march">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                    <option value=5>5</option>
+                </select>
+                <div class="p-2 ms-3 d-inline-block border border-white border-1" onClick="reset_large_tab('large_supply_march')">リセット</div>
+
+                <hr>
+
+                <div class="fs-5 w-50 p-2 d-inline-block border border-1 border-white me-3" onClick="up_large_tab('large_supply_blitz_krieg')">SUPPLY-BLITZ KRIEG</div>
+                <select name="large_supply_blitz_krieg" id="large_supply_blitz_krieg">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                    <option value=5>5</option>
+                </select>
+                <div class="p-2 ms-3 d-inline-block border border-white border-1" onClick="reset_large_tab('large_supply_blitz_krieg')">リセット</div>
+
+                <hr>
+
+                <div class="fs-5 w-50 p-2 d-inline-block border border-1 border-white me-3" onClick="up_large_tab('large_supply_siege')">SUPPLY-SIEGE</div>
+                <select name="large_supply_siege" id="large_supply_siege">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                    <option value=5>5</option>
+                </select>
+                <div class="p-2 ms-3 d-inline-block border border-white border-1" onClick="reset_large_tab('large_supply_siege')">リセット</div>
+
+                <hr>
+
+                <div class="fs-5 w-50 p-2 d-inline-block border border-1 border-white me-3" onClick="up_large_tab('large_supply_front_line')">SUPPLY-FRONT LINE</div>
+                <select name="large_supply_front_line" id="large_supply_front_line">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                    <option value=5>5</option>
+                </select>
+                <div class="p-2 ms-3 d-inline-block border border-white border-1" onClick="reset_large_tab('large_supply_front_line')">リセット</div>
+
+                <hr>
+
+                <div class="fs-5 w-50 p-2 d-inline-block border border-1 border-white me-3" onClick="up_large_tab('large_supply_army')">SUPPLY-ARMY</div>
+                <select name="large_supply_army" id="large_supply_army">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                    <option value=5>5</option>
+                </select>
+                <div class="p-2 ms-3 d-inline-block border border-white border-1" onClick="reset_large_tab('large_supply_army')">リセット</div>
+
+                <hr>
+
+                <div class="fs-5 w-50 p-2 d-inline-block border border-1 border-white me-3" onClick="up_large_tab('large_supply_navy')">SUPPLY-NAVY</div>
+                <select name="large_supply_navy" id="large_supply_navy">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                    <option value=5>5</option>
+                </select>
+                <div class="p-2 ms-3 d-inline-block border border-white border-1" onClick="reset_large_tab('large_supply_navy')">リセット</div>
+
+                <hr>
+
+                <div class="fs-5 w-50 p-2 d-inline-block border border-1 border-white me-3" onClick="up_large_tab('large_supply_airforce')">SUPPLY-AIRFORCE</div>
+                <select name="large_supply_airforce" id="large_supply_airforce">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                    <option value=5>5</option>
+                </select>
+                <div class="p-2 ms-3 d-inline-block border border-white border-1" onClick="reset_large_tab('large_supply_airforce')">リセット</div>
+            </div>
+        </section>
+        <button type="submit" class="m-3 px-3 mb-5 py-1 bg-light rounded-pill" onclick="calculate_large_tab()">ラージタブの選択を確定する</button>
+        <section class="w-100 text-center mb-2">
+            <div class="w-25 d-inline-block border border-2 border-gray text-center">
+                <div class="py-1 text-white bg-secondary bg-gradient">攻撃力</div>
+                <div id="large_attack_total" class="py-1">0</div>
+            </div>
+            <div class="w-25 d-inline-block border border-2 border-gray text-center">
+                <div class="py-1 text-white bg-secondary bg-gradient">爆発</div>
+                <div id="large_explosion_total" class="py-1">0</div>
+            </div>
+            <div class="w-25 d-inline-block border border-2 border-gray text-center">
+                <div class="py-1 text-white bg-secondary bg-gradient">ブリッツ</div>
+                <div id="large_blitz_total" class="py-1">0</div>
+            </div>
+        </section>
+        <section class="w-100 text-center">
+            <div>ACTIVATE TAB</div>
+            <div class="d-inline-block w-25 border border-2 border-gray text-center">
+                <div class="py-1 text-white bg-success bg-gradient">GREEN</div>
+                <div id="large_green_tab_total" class="py-1">0</div>
+            </div>
+            <div class="d-inline-block w-25 border border-2 border-gray text-center">
+                <div class="py-1 text-white bg-primary bg-gradient">BLUE</div>
+                <div id="large_blue_tab_total" class="py-1">0</div>
+            </div>
+            <div class="d-inline-block w-25 border border-2 border-gray text-center">
+                <div class="py-1 text-white bg-danger bg-gradient">RED</div>
+                <div id="large_red_tab_total" class="py-1">0</div>
+            </div>
+            <div class="d-inline-block w-25 border border-2 border-gray text-center">
+                <div class="py-1 text-white bg-secondary bg-gradient">BLITZ</div>
+                <div id="large_blitz_tab_total" class="py-1">0</div>
+            </div>
+            <div class="d-inline-block w-25 border border-2 border-gray text-center">
+                <div class="py-1 text-white bg-secondary bg-gradient">LAND</div>
+                <div id="large_land_tab_total" class="py-1">0</div>
+            </div>
+            <div class="d-inline-block w-25 border border-2 border-gray text-center">
+                <div class="py-1 text-white bg-secondary bg-gradient">SMALL</div>
+                <div id="large_small_tab_total" class="py-1">0</div>
+            </div>
+        </section>
+    </section>
+
+    <hr class="mx-5">
+
+    <section>
+        <h2 class="fs-4 my-4 fw-bold text-decoration-underline">追加で発動させたタブ</h2>
+        <h3 class="fs-5 mt-3 mb-1 fw-bold">ラージタブ、ランドタブ</h3>
+        <section class="pb-3 bg-success bg-gradient text-white">
+            <h4 class="pt-3 ps-3 fs-5 fw-bold">陸軍</h4>
+            <div class="ps-3">
+                <div class="fs-5 w-50 p-2 d-inline-block border border-1 border-white me-3" onClick="up_additional_tab('additional_infantry')">INFANTRY</div>
+                <select name="additional_infantry" id="additional_infantry">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                    <option value=5>5</option>
+                </select>
+                <div class="p-2 ms-3 d-inline-block border border-white border-1" onClick="reset_additional_tab('additional_infantry')">リセット</div>
+
+                <hr>
+
+                <div class="fs-5 w-50 p-2 d-inline-block border border-1 border-white me-3" onClick="up_additional_tab('additional_canon')">CANON</div>
+                <select name="additional_canon" id="additional_canon">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                    <option value=5>5</option>
+                </select>
+                <div class="p-2 ms-3 d-inline-block border border-white border-1" onClick="reset_additional_tab('additional_canon')">リセット</div>
+
+                <hr>
+
+                <div class="fs-5 w-50 p-2 d-inline-block border border-1 border-white me-3" onClick="up_additional_tab('additional_armored_vehicle')">ARMORED VEHICLE</div>
+                <select name="additional_armored_vehicle" id="additional_armored_vehicle">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                    <option value=5>5</option>
+                </select>
+                <div class="p-2 ms-3 d-inline-block border border-white border-1" onClick="reset_additional_tab('additional_armored_vehicle')">リセット</div>
+
+                <hr>
+
+                <div class="fs-5 w-50 p-2 d-inline-block border border-1 border-white me-3" onClick="up_additional_tab('additional_tank')">TANK</div>
+                <select name="additional_tank" id="additional_tank">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                    <option value=5>5</option>
+                </select>
+                <div class="p-2 ms-3 d-inline-block border border-white border-1" onClick="reset_additional_tab('additional_tank')">リセット</div>
+
+                <hr>
+
+                <div class="fs-5 w-50 p-2 d-inline-block border border-1 border-white me-3" onClick="up_additional_tab('additional_tank_destroyer')">TANK DESTROYER</div>
+                <select name="additional_tank_destroyer" id="additional_tank_destroyer">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                    <option value=5>5</option>
+                </select>
+                <div class="p-2 ms-3 d-inline-block border border-white border-1" onClick="reset_additional_tab('additional_tank_destroyer')">リセット</div>
+
+                <hr>
+
+                <div class="fs-5 w-50 p-2 d-inline-block border border-1 border-white me-3" onClick="up_additional_tab('additional_heavy_tank')">HEAVY TANK</div>
+                <select name="additional_heavy_tank" id="additional_heavy_tank">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                    <option value=5>5</option>
+                </select>
+                <div class="p-2 ms-3 d-inline-block border border-white border-1" onClick="reset_additional_tab('additional_heavy_tank')">リセット</div>
+            </div>
+        </section>
+        <section class="pb-3 bg-primary bg-gradient text-white">
+            <h4 class="pt-3 ps-3 fs-5 fw-bold">海軍</h4>
+            <div class="ps-3">
+                <div class="fs-5 w-50 p-2 d-inline-block border border-1 border-white me-3" onClick="up_additional_tab('additional_heavy_cruiser')">HEAVY CRUISER</div>
+                <select name="additional_heavy_cruiser" id="additional_heavy_cruiser">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                    <option value=5>5</option>
+                </select>
+                <div class="p-2 ms-3 d-inline-block border border-white border-1" onClick="reset_additional_tab('additional_heavy_cruiser')">リセット</div>
+
+                <hr>
+
+                <div class="fs-5 w-50 p-2 d-inline-block border border-1 border-white me-3" onClick="up_additional_tab('additional_battle_ship')">BATTLE SHIP</div>
+                <select name="additional_battle_ship" id="additional_battle_ship">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                    <option value=5>5</option>
+                </select>
+                <div class="p-2 ms-3 d-inline-block border border-white border-1" onClick="reset_additional_tab('additional_battle_ship')">リセット</div>
+
+                <hr>
+
+                <div class="fs-5 w-50 p-2 d-inline-block border border-1 border-white me-3" onClick="up_additional_tab('additional_landing_ship')">LANDING SHIP</div>
+                <select name="additional_landing_ship" id="additional_landing_ship">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                    <option value=5>5</option>
+                </select>
+                <div class="p-2 ms-3 d-inline-block border border-white border-1" onClick="reset_additional_tab('additional_landing_ship')">リセット</div>
+
+                <hr>
+
+                <div class="fs-5 w-50 p-2 d-inline-block border border-1 border-white me-3" onClick="up_additional_tab('additional_aircraft_carrier')">AIRCRAFT CARRIER</div>
+                <select name="additional_aircraft_carrier" id="additional_aircraft_carrier">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                    <option value=5>5</option>
+                </select>
+                <div class="p-2 ms-3 d-inline-block border border-white border-1" onClick="reset_additional_tab('additional_aircraft_carrier')">リセット</div>
+            </div>
+        </section>
+        <section class="pb-3 bg-danger bg-gradient text-white">
+            <h4 class="pt-3 ps-3 fs-5 fw-bold">空軍</h4>
+            <div class="ps-3">
+                <div class="fs-5 w-50 p-2 d-inline-block border border-1 border-white me-3" onClick="up_additional_tab('additional_fighter')">FIGHTER</div>
+                <select name="additional_fighter" id="additional_fighter">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                    <option value=5>5</option>
+                </select>
+                <div class="p-2 ms-3 d-inline-block border border-white border-1" onClick="reset_additional_tab('additional_fighter')">リセット</div>
+
+                <hr>
+
+                <div class="fs-5 w-50 p-2 d-inline-block border border-1 border-white me-3" onClick="up_additional_tab('additional_air_born')">AIR BORN</div>
+                <select name="additional_air_born" id="additional_air_born">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                    <option value=5>5</option>
+                </select>
+                <div class="p-2 ms-3 d-inline-block border border-white border-1" onClick="reset_additional_tab('additional_air_born')">リセット</div>
+
+                <hr>
+
+                <div class="fs-5 w-50 p-2 d-inline-block border border-1 border-white me-3" onClick="up_additional_tab('additional_bomber')">BOMBER</div>
+                <select name="additional_bomber" id="additional_bomber">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                    <option value=5>5</option>
+                </select>
+                <div class="p-2 ms-3 d-inline-block border border-white border-1" onClick="reset_additional_tab('additional_bomber')">リセット</div>
+            </div>
+        </section>
+
+        <section class="pb-3 bg-warning bg-gradient">
+            <h4 class="pt-3 ps-3 fs-5 fw-bold">補給</h4>
+            <div class="ps-3">
+                <div class="fs-5 w-50 p-2 d-inline-block border border-1 border-white me-3" onClick="up_additional_tab('large_additional_march')">SUPPLY-MARCH</div>
+                <select name="additional_supply_march" id="additional_supply_march">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                    <option value=5>5</option>
+                </select>
+                <div class="p-2 ms-3 d-inline-block border border-white border-1" onClick="reset_additional_tab('additional_supply_march')">リセット</div>
+
+                <hr>
+
+                <div class="fs-5 w-50 p-2 d-inline-block border border-1 border-white me-3" onClick="up_additional_tab('additional_supply_siege')">SUPPLY-SIEGE</div>
+                <select name="additional_supply_siege" id="additional_supply_siege">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                    <option value=5>5</option>
+                </select>
+                <div class="p-2 ms-3 d-inline-block border border-white border-1" onClick="reset_additional_tab('additional_supply_siege')">リセット</div>
+            </div>
+        </section>
+        <h3 class="fs-5 my-4 fw-bold">スモールタブ</h3>
+        <section class="pb-3 bg-success bg-gradient text-white">
+            <h4 class="pt-3 ps-3 fs-5 fw-bold">GREEN</h4>
+            <div class="ps-3">
+                <div class="fs-5 w-50 p-2 d-inline-block border border-1 border-white me-3" onClick="up_small_tab('mine')">MINE</div>
+                <select name="mine" id="mine">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                    <option value=5>5</option>
+                </select>
+                <div class="p-2 ms-3 d-inline-block border border-white border-1" onClick="reset_small_tab('mine')">リセット</div>
+
+                <hr>
+
+                <div class="fs-5 w-50 p-2 d-inline-block border border-1 border-white me-3" onClick="up_small_tab('mine_roller')">MINE ROLLER</div>
+                <select name="mine_roller" id="mine_roller">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                    <option value=5>5</option>
+                </select>
+                <div class="p-2 ms-3 d-inline-block border border-white border-1" onClick="reset_small_tab('mine_roller')">リセット</div>
+
+                <hr>
+
+                <div class="fs-5 w-50 p-2 d-inline-block border border-1 border-white me-3" onClick="up_small_tab('encryption_machine')">ENCRYPTION MACHINE</div>
+                <select name="encryption_machine" id="encryption_machine">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                    <option value=5>5</option>
+                </select>
+                <div class="p-2 ms-3 d-inline-block border border-white border-1" onClick="reset_small_tab('encryption_machine')">リセット</div>
+
+                <hr>
+
+                <div class="fs-5 w-50 p-2 d-inline-block border border-1 border-white me-3" onClick="up_small_tab('scout_car')">SCOUT CAR</div>
+                <select name="scout_car" id="scout_car">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                    <option value=5>5</option>
+                </select>
+                <div class="p-2 ms-3 d-inline-block border border-white border-1" onClick="reset_small_tab('scout_car')">リセット</div>
+
+                <hr>
+
+                <div class="fs-5 w-50 p-2 d-inline-block border border-1 border-white me-3" onClick="up_small_tab('insider')">INSIDER</div>
+                <select name="insider" id="insider">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                    <option value=5>5</option>
+                </select>
+                <div class="p-2 ms-3 d-inline-block border border-white border-1" onClick="reset_small_tab('insider')">リセット</div>
+            </div>
+        </section>
+        <section class="pb-3 bg-primary bg-gradient text-white">
+            <h4 class="pt-3 ps-3 fs-5 fw-bold">BLUE</h4>
+            <div class="ps-3">
+                <div class="fs-5 w-50 p-2 d-inline-block border border-1 border-white me-3" onClick="up_small_tab('international_treaty')">INTERNATIONAL TREATY</div>
+                <select name="international_treaty" id="international_treaty">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                    <option value=5>5</option>
+                </select>
+                <div class="p-2 ms-3 d-inline-block border border-white border-1" onClick="reset_small_tab('international_treaty')">リセット</div>
+
+                <hr>
+
+                <div class="fs-5 w-50 p-2 d-inline-block border border-1 border-white me-3" onClick="up_small_tab('destroyer')">DESTROYER</div>
+                <select name="destroyer" id="destroyer">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                    <option value=5>5</option>
+                </select>
+                <div class="p-2 ms-3 d-inline-block border border-white border-1" onClick="reset_small_tab('destroyer')">リセット</div>
+
+                <hr>
+
+                <div class="fs-5 w-50 p-2 d-inline-block border border-1 border-white me-3" onClick="up_small_tab('radar')">RADAR</div>
+                <select name="radar" id="radar">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                    <option value=5>5</option>
+                </select>
+                <div class="p-2 ms-3 d-inline-block border border-white border-1" onClick="reset_small_tab('radar')">リセット</div>
+
+                <hr>
+
+                <div class="fs-5 w-50 p-2 d-inline-block border border-1 border-white me-3" onClick="up_small_tab('submarine')">SUBMARINE</div>
+                <select name="submarine" id="submarine">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                    <option value=5>5</option>
+                </select>
+                <div class="p-2 ms-3 d-inline-block border border-white border-1" onClick="reset_small_tab('submarine')">リセット</div>
+            </div>
+        </section>
+        <section class="pb-3 bg-danger bg-gradient text-white">
+            <h4 class="pt-3 ps-3 fs-5 fw-bold">RED</h4>
+            <div class="ps-3">
+                <div class="fs-5 w-50 p-2 d-inline-block border border-1 border-white me-3" onClick="up_small_tab('radio_transceiver')">RADIO TRANSCEIVER</div>
+                <select name="radio_transceiver" id="radio_transceiver">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                    <option value=5>5</option>
+                </select>
+                <div class="p-2 ms-3 d-inline-block border border-white border-1" onClick="reset_small_tab('radio_transceiver')">リセット</div>
+
+                <hr>
+
+                <div class="fs-5 w-50 p-2 d-inline-block border border-1 border-white me-3" onClick="up_small_tab('reconnaissance_aircraft')">RECONNAISSANCE AIRCRAFT</div>
+                <select name="reconnaissance_aircraft" id="reconnaissance_aircraft">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                    <option value=5>5</option>
+                </select>
+                <div class="p-2 ms-3 d-inline-block border border-white border-1" onClick="reset_small_tab('reconnaissance_aircraft')">リセット</div>
+
+                <hr>
+
+                <div class="fs-5 w-50 p-2 d-inline-block border border-1 border-white me-3" onClick="up_small_tab('small_fighter')">FIGHTER</div>
+                <select name="small_fighter" id="small_fighter">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                    <option value=5>5</option>
+                </select>
+                <div class="p-2 ms-3 d-inline-block border border-white border-1" onClick="reset_small_tab('small_fighter')">リセット</div>
+
+                <hr>
+
+                <div class="fs-5 w-50 p-2 d-inline-block border border-1 border-white me-3" onClick="up_small_tab('strategic_bomber')">STRATEGIC BOMBER</div>
+                <select name="strategic_bomber" id="strategic_bomber">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                    <option value=5>5</option>
+                </select>
+                <div class="p-2 ms-3 d-inline-block border border-white border-1" onClick="reset_small_tab('strategic_bomber')">リセット</div>
+            </div>
+        </section>
+        <h3 class="fs-5 my-4 fw-bold">裏向きに使う</h3>
+        <section class="pb-3 bg-secondary bg-gradient text-white">
+            <h4 class="pt-3 ps-3 fs-5 fw-bold">特殊</h4>
+            <div class="ps-3">
+                <div class="fs-5 w-50 p-2 d-inline-block border border-1 border-white me-3" onClick="up_back_tab('hand_grenade')">HAND GRENADE</div>
+                <select name="hand_grenade" id="hand_grenade">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                </select>
+                <div class="p-2 ms-3 d-inline-block border border-white border-1" onClick="reset_back_tab('hand_grenade')">リセット</div>
+            </div>
+        </section>
+        <section class="pb-3 bg-warning bg-gradient">
+            <h4 class="pt-3 ps-3 fs-5 fw-bold">補給</h4>
+            <div class="ps-3">
+                <div class="fs-5 w-50 p-2 d-inline-block border border-1 border-white me-3" onClick="up_back_tab('back_supply_march')">SUPPLY-MARCH</div>
+                <select name="back_supply_march" id="back_supply_march">
+                    <option value=0>0</option>
+                    <option value=1>1</option>
+                </select>
+                <div class="p-2 ms-3 d-inline-block border border-white border-1" onClick="reset_back_tab('back_supply_march')">リセット</div>
+            </div>
+        </section>
+    </section>
+
+    <section>
+    攻撃可能な前線
+
+    <h3>注意</h3>
+    <li>
+        <
+    </li>
+</section>
+</article>
+
+
+<footer>
+
+</footer>
+</body>
+
+<script>
+
+  class Front {
+    constructor(region, repel, dominate, explosion, discard){
+      this.region = region;
+      this.repel = repel;
+      this.dominate = dominate;
+      this.explosion = explosion;
+      this.discard = discard;
+
+
+      this.defence = false;
+    }
+
+    add_defence(){
+      this.defence = true;
+    }
+  }
+
+  const sea = new Front('SEA', 8, 16, 0, 1);
+  const forest = new Front('GROUND', 6, 14, 2, 0);
+  const military_base = new Front('SEA', 7, 15, 2, 0);
+  const village = new Front('GROUND', 6, 16, 2, 0);
+  const factory = new Front('SEA', 6, 16, 2, 0);
+  const hill = new Front('GROUND', 7, 15, 1, 0);
+  const military_port = new Front('SEA', 8, 16, 1, 0);
+  const mountain = new Front('GROUND', 8, 17, 0, 0);
+  const island = new Front('SEA', 9, 17, 1, 0);
+  const desert = new Front('GROUND', 6, 13, 0, 1);
+  const city = new Front('SEA', 9, 18, 0, 0);
+
+  class LargeWeapon {
+    constructor(name, type, min_attack, max_attack, explosion, draw, discard, blitz, ability){
+      this.name = name;
+      this.type = type;
+      this.min_attack = min_attack;
+      this.max_attack = max_attack;
+      this.explosion = explosion;
+      this.draw = draw;
+      this.discard= discard;
+      this.blitz = blitz;
+      this.ability = ability;
+    }
+  }
+
+  const infantry = new LargeWeapon('infantry', 'GREEN', 1, 1, 0, 0, 0, 0, 'ACTIVATE_GREEN_TAB');
+  const canon = new LargeWeapon('canon', 'GREEN', 3, 3, 2, 0, 0, 0, 'none');
+  const armored_vehicle = new LargeWeapon('armored_vehicle', 'GREEN', 1, 3, 0, 0, 0, 1, 'none');
+  const tank = new LargeWeapon('tank', 'GREEN', 3, 4, 1, 0, 0, 1, 'none');
+  const tank_destroyer = new LargeWeapon('tank_destroyer', 'GREEN', 5, 5, 1, 0, 0, 1, 'none');
+  const heavy_tank = new LargeWeapon('heavy_tank', 'GREEN', 6, 6, 0, 0, 0, 1, 'DEFENCE');
+  const heavy_cruiser = new LargeWeapon('heavy_cruiser', 'BLUE', 4, 5, 0, 0, 0, 0, 'DEFENCE');
+  const battle_ship = new LargeWeapon('battle_ship', 'BLUE', 7, 7, 1, 0, 0, 0, 'none');
+  const landing_ship = new LargeWeapon('landing_ship', 'BLUE', 3, 3, 0, 1, 0, 0, 'DELIVERY');
+  const aircraft_carrier = new LargeWeapon('aircraft_carrier', 'BLUE', 3, 3, 0, 0, 0, 0, 'ACTIVATE_RED_TAB');
+  const fighter = new LargeWeapon('fighter', 'RED', 3, 4, 0, 0, 0, 1, 'BREAKTHROUGH');
+  const air_born = new LargeWeapon('air_born', 'RED', 2, 2, 0, 1, 0, 0, 'OVER_KILL');
+  const bomber = new LargeWeapon('bomber', 'RED', 5, 5, 1, 0, 0, 1, 'none');
+  const supply_propaganda = new LargeWeapon('supply_propaganda', 'YELLOW', 2, 2, 1, 0, 0, 0, 'ACTIVATE_SMALL_TAB');
+  const supply_march = new LargeWeapon('supply_march', 'YELLOW', -1, 1, 0, 0, 0, 0, 'MARCH');
+  const supply_blitz_krieg = new LargeWeapon('supply_blitz_krieg', 'YELLOW', 0, 0, 0, 0, 0, 0, 'ACTIVATE_BLITZ_TAB');
+  const supply_siege = new LargeWeapon('supply_siege', 'YELLOW', -1, 1, 0, 0, 0, 0, 'SIEGE');
+  const supply_front_line = new LargeWeapon('supply_front_line', 'YELLOW', 0, 0, 0, 0, 0, 0, 'ACTIVATE_LAND_TAB');
+  const supply_army = new LargeWeapon('supply_army', 'YELLOW', 0, 0, 0, 0, 0, 0, 'ACTIVATE_GREEN_TAB');
+  const supply_navy = new LargeWeapon('supply_navy', 'YELLOW', 0, 0, 0, 0, 0, 0, 'ACTIVATE_BLUE_TAB');
+  const supply_airforce = new LargeWeapon('supply_airforce', 'YELLOW', 0, 0, 0, 0, 0, 0, 'ACTIVATE_RED_TAB');
+
+  const large_weapons = [
+    infantry, canon, armored_vehicle, tank, tank_destroyer, heavy_tank,
+    heavy_cruiser, battle_ship, landing_ship, aircraft_carrier,
+    fighter, air_born, bomber,
+    supply_propaganda, supply_march, supply_blitz_krieg, supply_siege, supply_front_line, supply_army, supply_navy, supply_airforce]
+
+  class SmallWeapon {
+    constructor(type, min_attack, max_attack, explosion, draw, discard, blitz, ability) {
+      this.type = type;
+      this.min_attack = min_attack;
+      this.max_attack = max_attack;
+      this.explosion = explosion;
+      this.draw = draw;
+      this.discard = discard;
+      this.blitz = blitz;
+      this.ability = ability;
+    }
+  }
+
+  const mine = new SmallWeapon('GREEN', 0, 0, 1, 1, 0, 0, 'none');
+  const mine_roller = new SmallWeapon('GREEN', 2, 2, 0, 0, 0, 0, 'REMOVE_MINE');
+  const encryption_machine = new SmallWeapon('GREEN', 2, 2, 0, 0, 0, 0, 'OVER_KILL');
+  const scout_car = new SmallWeapon('GREEN', 1, 1, 0, 1, 0, 0, 'none');
+  const insider = new SmallWeapon('GREEN', 1, -1, 0, 2, 0, 0, 'none');
+  const international_treaty = new SmallWeapon('BLUE', 0, 0, 0, 1, 0, 0, 'none');
+  const destroyer = new SmallWeapon('BLUE', 3, 3, 1, 0, 0, 0, 'none');
+  const radar = new SmallWeapon('BLUE', 1, 1, 0, 1, 0, 0, 'none');
+  const submarine = new SmallWeapon('BLUE', 3, 4, 0, 0, 0, 0, 'DEFENCE');
+  const radio_transceiver = new SmallWeapon('RED', -1, -1, 0, 1, 0, 0, 'none');
+  const reconnaissance_aircraft = new SmallWeapon('RED', 1, 1, 0, 1, 0, 0, 'none');
+  const small_fighter = new SmallWeapon('RED', 2, 2, 0, 0, 0, 2, 'BREAKTHROUGH');
+  const strategic_bomber = new SmallWeapon('RED', 7, 7, 1, 0, 1, 0, 'none');
+
+  const small_weapons = [
+    mine, mine_roller, encryption_machine, scout_car, insider,
+    international_treaty, destroyer, radar, submarine,
+    radio_transceiver, reconnaissance_aircraft, small_fighter, strategic_bomber
+  ]
+
+  class TotalValues {
+    constructor(types, min_attack, max_attack, explosion, draw, discard, blitz, abilities){
+      this.types = types;
+      this.min_attack = min_attack;
+      this.max_attack = max_attack;
+      this.explosion = explosion;
+      this.draw = draw;
+      this.discard= discard;
+      this.blitz = blitz;
+      this.abilities = abilities;
+
+      this.region_attackable = false;
+      this.repel_attackable = false;
+      this.dominate_attackable = false;
+      this.defence_attackable = false;
+
+      this.attack_text = this.attack_text();
+
+      this.green_tab_count = this.abilities.filter(function (tab){ return tab==='ACTIVATE_GREEN_TAB' }).length;
+      this.blue_tab_count = this.abilities.filter(function (tab){ return tab==='ACTIVATE_BLUE_TAB' }).length;
+      this.red_tab_count = this.abilities.filter(function (tab){ return tab==='ACTIVATE_RED_TAB' }).length;
+      this.blitz_tab_count = this.abilities.filter(function (tab){ return tab==='ACTIVATE_BLITZ_TAB' }).length;
+      this.land_tab_count = this.abilities.filter(function (tab){ return tab==='ACTIVATE_LAND_TAB' }).length;
+      this.small_tab_count = this.abilities.filter(function (tab){ return tab==='ACTIVATE_SMALL_TAB' }).length;
+
+      }
+    attack_text(){
+      // 最大/最小が一致している場合は数値を返却。
+      // そうでなければ幅のある数値を返却。
+      if (this.max_attack === this.min_attack){
+        return this.max_attack
+      } else {
+        return this.max_attack + '〜' + this.min_attack
+      }
+    }
+
+    judge_attack_power_with_over_kill(front){
+      // over killありの場合の判定
+      if (front.repel <= this.max_attack) {
+        this.repel_attackable = true;
+      }
+      if (front.dominate <= this.max_attack){
+        this.dominate_attackable = true;
+      }
+    }
+
+    judge_attack_power(front){
+      // over killなしの場合の判定
+      if (front.repel >= this.min_attack && front.repel <= this.max_attack){
+        this.repel_attackable = true;
+      }
+      if (front.dominate >= this.min_attack && front.dominate <= this.max_attack){
+        this.dominate_attackable = true;
+      }
+    }
+
+    available_attack(front) {
+      // typeの判定
+      switch (front.region) {
+        case 'GROUND':
+          console.log(front.region);
+          if (this.types.includes('BLUE')) {
+            if (this.abilities.includes('SIEGE')) {
+              this.region_attackable = true;
+            }
+          } else if (this.types.includes('GREEN')) {
+            this.region_attackable = true;
+          }
+          break;
+        case 'SEA':
+          console.log(front.region);
+          if (this.types.includes('GREEN')) {
+            if (this.abilities.includes('DELIVERY')) {
+              this.region_attackable = true;
+            }
+          } else if (this.types.includes('BLUE')) {
+            this.region_attackable = true;
+          }
+          break;
+        default:
+          console.log('Error!')
+      }
+
+      // 攻撃力の判定
+      if (this.abilities.includes('OVER_KILL')) {
+        console.log('overkillあり')
+        this.judge_attack_power_with_over_kill(front)
+      } else {
+        console.log('overkillなし')
+        this.judge_attack_power(front)
+      }
+
+      // 爆発判定
+
+      // 防衛判定
+      if (front.defence) {
+        // 防衛がついている場合は、
+        //   突破があればtrue, なければfalse
+        if (this.abilities.includes('BREAKTHROUGH')){
+          this.defence_attackable = true
+        }
+      } else {
+        this.defence_attackable = true
+      }
+
+      const json = {
+        region_attackable: this.region_attackable,
+        repel_attackable: this.repel_attackable,
+        dominate_attackable: this.dominate_attackable,
+        defence_attackable: this.defence_attackable
+      }
+      return json
+    }
+  }
+
+  function merge_types(array, type){
+    // 重複しないようにマージする
+    // new Set(array)を使うとシンプルになることはわかりつつ、責務分担とあとでそのまま読めば思い出せるようにこの書き方にしておく。
+    if (array.includes(type)){
+      //含まれている場合は何もしない
+    } else {
+      array.push(type);
+    }
+    return array
+  }
+
+  function merge_abilities(array, ability){
+    if (ability === 'none'){
+      //noneの場合は何もしない
+    } else {
+      array.push(ability);
+    }
+    return array
+  }
+
+  function calculate_total(array){
+    let array_types = [];
+    let sum_min_attack = 0;
+    let sum_max_attack = 0;
+    let sum_explosion = 0;
+    let sum_draw = 0;
+    let sum_discard = 0;
+    let sum_blitz = 0;
+    let array_abilities = [];
+    array.forEach((weapon) => {
+      array_types = merge_types(array_types, weapon.type)
+      sum_min_attack = sum_min_attack + weapon.min_attack;
+      sum_max_attack = sum_max_attack + weapon.max_attack;
+      sum_explosion = sum_explosion + weapon.explosion;
+      sum_draw = sum_draw + weapon.draw;
+      sum_discard = sum_discard + weapon.discard;
+      sum_blitz = sum_blitz + weapon.blitz;
+      array_abilities = merge_abilities(array_abilities, weapon.ability);
+    })
+    return new TotalValues(array_types, sum_min_attack, sum_max_attack, sum_explosion, sum_draw, sum_discard, sum_blitz, array_abilities)
+  }
+
+  function merge_totals(large_total, additional_total){
+    return new TotalValues(
+      Array.from(new Set(large_total.types.concat(additional_total.types))),
+      large_total.min_attack + additional_total.min_attack,
+      large_total.max_attack + additional_total.max_attack,
+      large_total.explosion + additional_total.explosion,
+      large_total.draw + additional_total.draw,
+      large_total.discard + additional_total.discard,
+      large_total.blitz + additional_total.blitz,
+      large_total.abilities.concat(additional_total.abilities)
+    )
+  }
+
+  function up_large_infantry(){
+    const elm = document.getElementById('large_infantry')
+    if (elm.value != 5){
+      elm.value = parseInt(elm.value) + 1;
+    }
+  }
+
+  function up_large_tab(id){
+    const elm = document.getElementById(id);
+    if (elm.value != 5){
+      elm.value = parseInt(elm.value) + 1;
+    }
+  }
+
+  function reset_large_tab(id){
+    const elm = document.getElementById(id);
+    elm.value = 0;
+  }
+
+  function calculate_large_tab(){
+    let weapons = [];
+    large_weapons.forEach((weapon) => {
+      for (let i = 0; i < document.getElementById('large_' + weapon.name).value; i++){
+        console.log(weapon)
+        weapons.push(weapon);
+      }
+    })
+
+    console.log('weapons: ' + JSON.stringify(weapons));
+    const large_total = calculate_total(weapons);
+    console.log('large_total: ' + JSON.stringify(large_total));
+
+    const large_attack_textarea = document.getElementById('large_attack_total');
+    const large_explosion_textarea = document.getElementById('large_explosion_total');
+    const large_blitz_textarea = document.getElementById('large_blitz_total');
+    const large_green_tab_textarea = document.getElementById('large_green_tab_total');
+    const large_blue_tab_textarea = document.getElementById('large_blue_tab_total');
+    const large_red_tab_textarea = document.getElementById('large_red_tab_total');
+    const large_blitz_tab_textarea = document.getElementById('large_blitz_tab_total');
+    const large_land_tab_textarea = document.getElementById('large_land_tab_total');
+    const large_small_tab_textarea = document.getElementById('large_small_tab_total');
+
+    large_attack_textarea.innerHTML = large_total.attack_text;
+    large_explosion_textarea.innerHTML = large_total.explosion;
+    large_blitz_textarea.innerHTML = large_total.blitz;
+    large_green_tab_textarea.innerHTML = large_total.green_tab_count;
+    large_blue_tab_textarea.innerHTML = large_total.blue_tab_count;
+    large_red_tab_textarea.innerHTML = large_total.red_tab_count;
+    large_blitz_tab_textarea.innerHTML = large_total.blitz_tab_count;
+    large_land_tab_textarea.innerHTML = large_total.land_tab_count;
+    large_small_tab_textarea.innerHTML = large_total.small_tab_count;
+
+
+
+    // 集計結果に応じて追加発動タブをアクティベートする
+  }
+
+  // 追加発動タブ・ランドタブ・スモールタブおよび捨て札の計算・集計処理
+
+  // 前線の設定
+    // 地雷の追加
+    // 防衛の追加
+
+  // let large_weapons = [canon, tank_destroyer, bomber, air_born]
+  // const large_total = calculate_total(large_weapons);
+  // console.log(large_total);
+  //
+  // let additional_weapons = [radio_transceiver, reconnaissance_aircraft]
+  // const additional_total = calculate_total(additional_weapons);
+  // console.log(additional_total);
+  //
+  // const grand_total = merge_totals(large_total, additional_total);
+  // console.log(grand_total);
+  // console.log(grand_total.min_attack);
+  // console.log(grand_total.max_attack);
+  // console.log(grand_total.abilities)
+  //
+  // hill.add_defence();
+  // console.log(hill);
+  //
+  //
+  //
+  //
+  //
+  // console.log(grand_total.available_attack(hill));
+
+</script>
+
+</html>
